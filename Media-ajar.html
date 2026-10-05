@@ -1,0 +1,702 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Belajar Lingkaran - Animasi Seru!</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Comic Sans MS', 'Segoe UI', sans-serif; }
+  body { background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%); min-height: 100vh; padding: 20px; color: #333; }
+
+  header { text-align: center; background: #fff; border-radius: 25px; padding: 20px; margin-bottom: 20px; box-shadow: 0 8px 20px rgba(0,0,0,0.1); }
+  header h1 { color: #ff6b6b; font-size: 2.2em; margin-bottom: 5px; animation: bounce 2s infinite; }
+  @keyframes bounce { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-8px)} }
+  header p { color: #666; font-size: 1.1em; }
+
+  .container { max-width: 950px; margin: 0 auto; }
+  .card { background: #fff; border-radius: 25px; padding: 25px; margin-bottom: 20px; box-shadow: 0 8px 20px rgba(0,0,0,0.08); }
+  .card h2 { color: #4ecdc4; margin-bottom: 15px; font-size: 1.6em; border-bottom: 3px dashed #4ecdc4; padding-bottom: 8px; }
+  .card p, .card li { font-size: 1.1em; line-height: 1.7; }
+
+  .anim-box { display: flex; flex-direction: column; align-items: center; gap: 15px; margin: 20px 0; }
+  .svg-anim { width: 320px; height: 320px; max-width: 100%; }
+
+  .btn-group { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; }
+
+  button {
+    background: #ff6b6b; color: #fff; border: none; padding: 12px 25px; border-radius: 12px;
+    font-size: 1em; font-weight: bold; cursor: pointer; transition: transform 0.2s, background 0.2s;
+    font-family: inherit;
+  }
+  button:hover { background: #ee5253; transform: scale(1.05); }
+  button:active { transform: scale(0.98); }
+  button.blue { background: #4ecdc4; } button.blue:hover { background: #3bb3ab; }
+  button.green { background: #52c41a; } button.green:hover { background: #449d15; }
+
+  .tali-path { fill: none; stroke: #ff6b6b; stroke-width: 7; stroke-linecap: round; }
+
+  .label-info {
+    background: #fff5f5; padding: 10px 20px; border-radius: 15px;
+    border-left: 6px solid #ff6b6b; font-size: 1.05em; text-align: center;
+  }
+
+  .pizza-svg { width: 100%; max-width: 700px; height: auto; }
+  .slice { transition: transform 1.4s cubic-bezier(0.4, 0.0, 0.2, 1); }
+
+  /* ===== PANEL SLIDER ===== */
+  .slider-panel {
+    background: #f0fffe;
+    border-radius: 18px;
+    padding: 18px 22px;
+    margin: 10px 0 5px;
+    width: 100%;
+    max-width: 620px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .slider-row {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .slider-label {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: bold;
+    color: #444;
+    font-size: 1em;
+  }
+
+  .slider-value {
+    background: #4ecdc4;
+    color: #fff;
+    padding: 3px 12px;
+    border-radius: 10px;
+    font-size: 0.95em;
+    min-width: 60px;
+    text-align: center;
+  }
+
+  input[type=range] {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 100%;
+    height: 10px;
+    border-radius: 8px;
+    background: linear-gradient(to right, #ffb142, #ff6b6b);
+    outline: none;
+    cursor: pointer;
+  }
+
+  input[type=range]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    background: #fff;
+    border: 4px solid #4ecdc4;
+    cursor: pointer;
+    transition: transform 0.15s;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+  }
+
+  input[type=range]::-webkit-slider-thumb:hover { transform: scale(1.15); }
+
+  input[type=range]::-moz-range-thumb {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: #fff;
+    border: 4px solid #4ecdc4;
+    cursor: pointer;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+  }
+
+  .preset-group {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-top: 4px;
+  }
+
+  .preset-btn {
+    background: #fff;
+    color: #4ecdc4;
+    border: 2px solid #4ecdc4;
+    padding: 6px 14px;
+    border-radius: 10px;
+    font-size: 0.9em;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-family: inherit;
+  }
+
+  .preset-btn:hover { background: #4ecdc4; color: #fff; transform: scale(1.05); }
+  .preset-btn.active { background: #4ecdc4; color: #fff; }
+
+  .calc-input { display: flex; flex-wrap: wrap; gap: 10px; margin: 15px 0; align-items: center; }
+  .calc-input label { font-weight: bold; }
+  .calc-input input[type=number] {
+    padding: 10px 15px; border: 2px solid #4ecdc4; border-radius: 12px;
+    font-size: 1em; width: 140px; outline: none;
+  }
+  .calc-input input[type=number]:focus { border-color: #ff6b6b; }
+
+  .hasil {
+    background: #fff5f5; border-left: 6px solid #ff6b6b; padding: 15px 20px;
+    border-radius: 12px; margin-top: 15px; font-size: 1.05em; display: none;
+  }
+  .hasil.show { display: block; animation: fadeIn 0.4s; }
+  @keyframes fadeIn { from{opacity:0;transform:translateY(-8px)} to{opacity:1;transform:translateY(0)} }
+
+  .quiz-question { background: #f0fffe; border-radius: 15px; padding: 18px; margin-bottom: 15px; }
+  .quiz-question p { font-weight: bold; margin-bottom: 12px; }
+  .quiz-option {
+    display: block; background: #fff; border: 2px solid #b2f0ec; border-radius: 12px;
+    padding: 12px 18px; margin: 8px 0; cursor: pointer; transition: all 0.2s; font-size: 1em;
+  }
+  .quiz-option:hover { background: #e0fffd; border-color: #4ecdc4; }
+  .quiz-option.correct { background: #c8f7c5; border-color: #4caf50; font-weight: bold; }
+  .quiz-option.wrong { background: #ffcdd2; border-color: #f44336; }
+  .quiz-option.disabled { pointer-events: none; }
+
+  #score { text-align: center; font-size: 1.3em; font-weight: bold; color: #4ecdc4; margin-top: 15px; }
+  footer { text-align: center; color: #666; padding: 15px; font-size: 0.95em; }
+
+  @media (max-width: 600px) {
+    header h1 { font-size: 1.6em; }
+    .card h2 { font-size: 1.3em; }
+    .svg-anim { width: 260px; height: 260px; }
+    .slider-panel { padding: 14px 16px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>🔵 Belajar Lingkaran 🔴</h1>
+  <p>Media Ajar Interaktif dengan Animasi Seru!</p>
+</header>
+
+<div class="container">
+
+  <div class="card">
+    <h2>📖 Apa itu Lingkaran?</h2>
+    <p><strong>Lingkaran</strong> adalah bangun datar yang semua titiknya berjarak sama dari satu titik pusat.</p>
+    <div class="anim-box">
+      <svg class="svg-anim" viewBox="0 0 200 200">
+        <circle cx="100" cy="100" r="80" fill="#ffe0e0" stroke="#ff6b6b" stroke-width="4"/>
+        <circle cx="100" cy="100" r="5" fill="#333"/>
+        <line x1="100" y1="100" x2="180" y2="100" stroke="#4ecdc4" stroke-width="4" stroke-dasharray="6,4"/>
+        <line x1="20" y1="100" x2="180" y2="100" stroke="#ffb142" stroke-width="2" opacity="0.6"/>
+        <text x="100" y="95" text-anchor="middle" font-size="11" fill="#333" font-weight="bold">Pusat</text>
+        <text x="140" y="90" font-size="12" fill="#4ecdc4" font-weight="bold">r</text>
+        <text x="95" y="130" font-size="11" fill="#ffb142" font-weight="bold">d</text>
+      </svg>
+      <div class="label-info">
+        <strong>Titik Pusat</strong> (hitam) • <strong>Jari-jari r</strong> (biru) • <strong>Diameter d = 2×r</strong> (kuning)
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>🎬 Animasi 1: Keliling Lingkaran</h2>
+    <p>Kalau tali berputar mengelilingi lingkaran, panjangnya disebut <strong>keliling</strong>. 🌀</p>
+    <div class="anim-box">
+      <svg class="svg-anim" viewBox="0 0 200 200">
+        <circle cx="100" cy="100" r="80" fill="#fff5f5" stroke="#ffd0d0" stroke-width="2"/>
+        <circle id="tali" class="tali-path" cx="100" cy="100" r="80"/>
+        <circle id="titikJalan" cx="100" cy="20" r="8" fill="#ffb142" stroke="#fff" stroke-width="3" opacity="0"/>
+        <line x1="100" y1="100" x2="180" y2="100" stroke="#4ecdc4" stroke-width="3" stroke-dasharray="5,4"/>
+        <text x="140" y="95" font-size="13" fill="#4ecdc4" font-weight="bold">r</text>
+        <circle cx="100" cy="100" r="4" fill="#333"/>
+      </svg>
+      <div class="btn-group">
+        <button onclick="mainkanTali()">▶️ Putar Tali</button>
+        <button class="blue" onclick="resetTali()">🔄 Ulang</button>
+      </div>
+      <div class="label-info" id="infoKeliling">Keliling = 2 × π × r</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>🍕 Animasi 2: Luas Lingkaran Jadi Persegi</h2>
+    <p>Lingkaran dipotong menjadi banyak bagian, lalu disusun ulang menjadi <strong>persegi panjang</strong>. Ajaib! ✨</p>
+    <div class="anim-box">
+      <svg class="pizza-svg" id="pizzaSvg" viewBox="0 0 700 400"></svg>
+
+      <!-- PANEL SLIDER -->
+      <div class="slider-panel">
+        <div class="slider-row">
+          <div class="slider-label">
+            <span>🍕 Jumlah Potongan</span>
+            <span class="slider-value" id="valPotongan">16</span>
+          </div>
+          <input type="range" id="sliderPotongan" min="4" max="32" step="2" value="16">
+        </div>
+
+        <div class="slider-row">
+          <div class="slider-label">
+            <span>⚡ Kecepatan Animasi</span>
+            <span class="slider-value" id="valKecepatan">1.4s</span>
+          </div>
+          <input type="range" id="sliderKecepatan" min="0.5" max="3" step="0.1" value="1.4">
+        </div>
+
+        <div class="preset-group">
+          <button class="preset-btn" onclick="setPotongan(8, this)">8</button>
+          <button class="preset-btn active" onclick="setPotongan(16, this)">16</button>
+          <button class="preset-btn" onclick="setPotongan(24, this)">24</button>
+          <button class="preset-btn" onclick="setPotongan(32, this)">32</button>
+        </div>
+      </div>
+
+      <div class="btn-group">
+        <button class="green" onclick="potongPizza()">🍕 Potong & Susun!</button>
+        <button class="blue" onclick="resetPizza()">🔄 Ulang</button>
+      </div>
+      <div class="label-info" id="infoLuas">Luas = π × r²</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>🎯 Coba Hitung Sendiri!</h2>
+    <div class="calc-input">
+      <label for="jari">Jari-jari (r):</label>
+      <input type="number" id="jari" placeholder="Contoh: 7" min="0" step="any">
+      <button onclick="hitung()">Hitung! 🚀</button>
+    </div>
+    <div class="hasil" id="hasil"></div>
+  </div>
+
+  <div class="card">
+    <h2>🏆 Kuis Seru!</h2>
+    <div id="quiz"></div>
+    <div id="score"></div>
+  </div>
+
+</div>
+
+<footer>💡 Dibuat untuk belajar matematika yang menyenangkan 💡</footer>
+
+<script>
+/* ============================================================
+   ANIMASI 1: TALI KELILING
+   ============================================================ */
+const R_LINGKARAN = 80;
+const KELILING = 2 * Math.PI * R_LINGKARAN;
+
+let animTaliId = null;
+
+function initTali() {
+  const tali = document.getElementById('tali');
+  tali.style.strokeDasharray = KELILING;
+  tali.style.strokeDashoffset = KELILING;
+  tali.style.transformOrigin = '100px 100px';
+  tali.style.transform = 'rotate(-90deg)';
+}
+
+function mainkanTali() {
+  const tali = document.getElementById('tali');
+  const titik = document.getElementById('titikJalan');
+  const info = document.getElementById('infoKeliling');
+
+  if (animTaliId) cancelAnimationFrame(animTaliId);
+  initTali();
+  void tali.getBoundingClientRect();
+
+  titik.style.opacity = '1';
+  titik.setAttribute('cx', 100);
+  titik.setAttribute('cy', 20);
+
+  const startTime = performance.now();
+  const durasi = 4000;
+
+  function gambar(now) {
+    const t = Math.min((now - startTime) / durasi, 1);
+
+    tali.style.strokeDashoffset = KELILING * (1 - t);
+
+    const sudut = -Math.PI / 2 + t * 2 * Math.PI;
+    const x = 100 + R_LINGKARAN * Math.cos(sudut);
+    const y = 100 + R_LINGKARAN * Math.sin(sudut);
+    titik.setAttribute('cx', x);
+    titik.setAttribute('cy', y);
+
+    const persen = Math.round(t * 100);
+    info.innerHTML = `🌀 Tali berputar... <strong>${persen}%</strong>`;
+
+    if (t < 1) animTaliId = requestAnimationFrame(gambar);
+    else info.innerHTML = `✅ Tali sudah mengelilingi penuh!<br>Keliling = 2 × π × r`;
+  }
+  animTaliId = requestAnimationFrame(gambar);
+}
+
+function resetTali() {
+  if (animTaliId) cancelAnimationFrame(animTaliId);
+  animTaliId = null;
+  initTali();
+  document.getElementById('titikJalan').style.opacity = '0';
+  document.getElementById('titikJalan').setAttribute('cx', 100);
+  document.getElementById('titikJalan').setAttribute('cy', 20);
+  document.getElementById('infoKeliling').innerHTML = 'Keliling = 2 × π × r';
+}
+
+
+/* ============================================================
+   ANIMASI 2: PIZZA -> PERSEGI PANJANG (dengan SLIDER)
+   ============================================================ */
+
+let JUMLAH_POTONGAN = 16;  // akan diubah oleh slider
+let KECEPATAN_ANIM = 1.4;  // detik (untuk transition CSS)
+
+const R = 90;
+const CX_ASAL = 170;
+const CY_ASAL = 200;
+const CX_TARGET = 470;
+const CY_TARGET = 200;
+
+let slices = [];
+
+function buatPizza() {
+  const svg = document.getElementById('pizzaSvg');
+  svg.innerHTML = '';
+
+  const bg = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+  bg.setAttribute('x', 0); bg.setAttribute('y', 0);
+  bg.setAttribute('width', 700); bg.setAttribute('height', 400);
+  bg.setAttribute('fill', '#f0fffe');
+  bg.setAttribute('rx', 15);
+  svg.appendChild(bg);
+
+  const lblKiri = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+  lblKiri.setAttribute('x', CX_ASAL);
+  lblKiri.setAttribute('y', 40);
+  lblKiri.setAttribute('text-anchor', 'middle');
+  lblKiri.setAttribute('font-size', '16');
+  lblKiri.setAttribute('fill', '#666');
+  lblKiri.setAttribute('font-weight', 'bold');
+  lblKiri.setAttribute('font-family', 'Comic Sans MS, sans-serif');
+  lblKiri.textContent = '🍕 Lingkaran';
+  svg.appendChild(lblKiri);
+
+  const group = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+  group.setAttribute('id', 'sliceGroup');
+  group.setAttribute('transform', `translate(${CX_ASAL}, ${CY_ASAL})`);
+  svg.appendChild(group);
+
+  slices = [];
+  const sudutPer = (2 * Math.PI) / JUMLAH_POTONGAN;
+  const sudutAwal = -Math.PI / 2;
+
+  for (let i = 0; i < JUMLAH_POTONGAN; i++) {
+    const a1 = sudutAwal + i * sudutPer;
+    const a2 = sudutAwal + (i + 1) * sudutPer;
+
+    const warna = i % 2 === 0 ? '#ffb142' : '#ff6b6b';
+    const warnaTepi = i % 2 === 0 ? '#ff8c1a' : '#ee5253';
+
+    const x1 = R * Math.cos(a1);
+    const y1 = R * Math.sin(a1);
+    const x2 = R * Math.cos(a2);
+    const y2 = R * Math.sin(a2);
+    const largeArc = (a2 - a1) > Math.PI ? 1 : 0;
+
+    const d = `M 0 0
+               L ${x1} ${y1}
+               A ${R} ${R} 0 ${largeArc} 1 ${x2} ${y2}
+               Z`;
+
+    const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+    path.setAttribute('d', d);
+    path.setAttribute('fill', warna);
+    path.setAttribute('stroke', warnaTepi);
+    path.setAttribute('stroke-width', '1.2');
+    path.classList.add('slice');
+    path.style.transformOrigin = '0 0';
+    path.style.transitionDuration = `${KECEPATAN_ANIM}s`;
+
+    group.appendChild(path);
+
+    slices.push({
+      el: path,
+      a1: a1,
+      a2: a2,
+      sudutTengah: a1 + sudutPer / 2,
+      index: i
+    });
+  }
+
+  document.getElementById('infoLuas').innerHTML = 'Luas = π × r²';
+}
+
+function potongPizza() {
+  const svg = document.getElementById('pizzaSvg');
+  const info = document.getElementById('infoLuas');
+  info.innerHTML = '✂️ Memotong & menyusun ulang...';
+
+  svg.querySelectorAll('.overlay').forEach(el => el.remove());
+
+  const setengah = JUMLAH_POTONGAN / 2;
+  const lebarPersegi = Math.PI * R;
+  const lebarSlot = lebarPersegi / setengah;
+  const x0Persegi = CX_TARGET - lebarPersegi / 2;
+  const yAtas = CY_TARGET - R / 2;
+  const yBawah = CY_TARGET + R / 2;
+
+  slices.forEach((slice, i) => {
+    const baris = i % 2;
+    const kolom = Math.floor(i / 2);
+
+    let rotasi, tx, ty;
+
+    if (baris === 0) {
+      // WEDGE GENAP
+      const rotasi = Math.PI / 2 - slice.sudutTengah;
+      const deg = rotasi * 180 / Math.PI;
+
+      const xUjung = x0Persegi + (kolom + 0.5) * lebarSlot;
+      const yUjung = yAtas;
+
+      tx = xUjung - CX_ASAL;
+      ty = yUjung - CY_ASAL;
+
+      slice.el.style.transform = `translate(${tx}px, ${ty}px) rotate(${deg}deg)`;
+
+    } else {
+      // WEDGE GANJIL (MIRROR 180° + OFFSET ½ KOLOM)
+      const rotasi = Math.PI / 2 - slice.sudutTengah + Math.PI;
+      const deg = rotasi * 180 / Math.PI;
+
+      const xUjung = x0Persegi + (kolom + 1) * lebarSlot;
+      const yUjung = yBawah;
+
+      tx = xUjung - CX_ASAL;
+      ty = yUjung - CY_ASAL;
+
+      slice.el.style.transform = `translate(${tx}px, ${ty}px) rotate(${deg}deg)`;
+    }
+
+    slice.el.style.transitionDelay = `${i * 0.04}s`;
+  });
+
+  const totalDelay = JUMLAH_POTONGAN * 40 + KECEPATAN_ANIM * 1000 + 200;
+  setTimeout(() => {
+    info.innerHTML = `🎉 Tadaa! Potongan tersusun jadi <strong>persegi panjang</strong>!<br>
+      Panjang ≈ ½ keliling = π × r &nbsp;•&nbsp; Lebar = r<br>
+      <strong>Luas = π × r × r = π × r²</strong>`;
+
+    const x0 = x0Persegi;
+    const y0 = yAtas;
+
+    const outline = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+    outline.setAttribute('x', x0);
+    outline.setAttribute('y', y0);
+    outline.setAttribute('width', lebarPersegi);
+    outline.setAttribute('height', R);
+    outline.setAttribute('fill', 'none');
+    outline.setAttribute('stroke', '#4ecdc4');
+    outline.setAttribute('stroke-width', '3');
+    outline.setAttribute('stroke-dasharray', '10,6');
+    outline.setAttribute('rx', '6');
+    outline.classList.add('overlay');
+    svg.appendChild(outline);
+
+    const lblPanjang = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+    lblPanjang.setAttribute('x', CX_TARGET);
+    lblPanjang.setAttribute('y', y0 - 12);
+    lblPanjang.setAttribute('text-anchor', 'middle');
+    lblPanjang.setAttribute('font-size', '15');
+    lblPanjang.setAttribute('fill', '#4ecdc4');
+    lblPanjang.setAttribute('font-weight', 'bold');
+    lblPanjang.setAttribute('font-family', 'Comic Sans MS, sans-serif');
+    lblPanjang.textContent = 'panjang = π × r';
+    lblPanjang.classList.add('overlay');
+    svg.appendChild(lblPanjang);
+
+    const garisLebar = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+    garisLebar.setAttribute('x1', x0 + lebarPersegi + 12);
+    garisLebar.setAttribute('y1', y0);
+    garisLebar.setAttribute('x2', x0 + lebarPersegi + 12);
+    garisLebar.setAttribute('y2', y0 + R);
+    garisLebar.setAttribute('stroke', '#ff6b6b');
+    garisLebar.setAttribute('stroke-width', '2');
+    garisLebar.classList.add('overlay');
+    svg.appendChild(garisLebar);
+
+    const lblLebar = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+    lblLebar.setAttribute('x', x0 + lebarPersegi + 18);
+    lblLebar.setAttribute('y', CY_TARGET + 5);
+    lblLebar.setAttribute('font-size', '15');
+    lblLebar.setAttribute('fill', '#ff6b6b');
+    lblLebar.setAttribute('font-weight', 'bold');
+    lblLebar.setAttribute('font-family', 'Comic Sans MS, sans-serif');
+    lblLebar.textContent = 'r';
+    lblLebar.classList.add('overlay');
+    svg.appendChild(lblLebar);
+
+  }, totalDelay);
+}
+
+function resetPizza() {
+  slices.forEach(s => {
+    s.el.style.transitionDelay = '0s';
+    s.el.style.transform = 'translate(0px, 0px) rotate(0deg)';
+  });
+  const svg = document.getElementById('pizzaSvg');
+  svg.querySelectorAll('.overlay').forEach(el => el.remove());
+  document.getElementById('infoLuas').innerHTML = 'Luas = π × r²';
+}
+
+
+/* ============ SLIDER CONTROL ============ */
+const sliderPotongan = document.getElementById('sliderPotongan');
+const sliderKecepatan = document.getElementById('sliderKecepatan');
+const valPotongan = document.getElementById('valPotongan');
+const valKecepatan = document.getElementById('valKecepatan');
+
+// Slider jumlah potongan
+sliderPotongan.addEventListener('input', (e) => {
+  let val = parseInt(e.target.value);
+
+  // Harus genap (supaya bisa dibagi 2 untuk atas-bawah)
+  if (val % 2 !== 0) val += 1;
+
+  // Minimal 4, maksimal 32
+  if (val < 4) val = 4;
+  if (val > 32) val = 32;
+
+  JUMLAH_POTONGAN = val;
+  valPotongan.textContent = val;
+  e.target.value = val;
+
+  // Update active preset
+  document.querySelectorAll('.preset-btn').forEach(b => {
+    b.classList.toggle('active', parseInt(b.textContent) === val);
+  });
+
+  // Rebuild pizza
+  buatPizza();
+});
+
+// Slider kecepatan
+sliderKecepatan.addEventListener('input', (e) => {
+  KECEPATAN_ANIM = parseFloat(e.target.value);
+  valKecepatan.textContent = KECEPATAN_ANIM.toFixed(1) + 's';
+
+  // Update durasi transition semua slice
+  slices.forEach(s => {
+    s.el.style.transitionDuration = `${KECEPATAN_ANIM}s`;
+  });
+});
+
+// Preset buttons
+function setPotongan(val, btn) {
+  sliderPotongan.value = val;
+  JUMLAH_POTONGAN = val;
+  valPotongan.textContent = val;
+
+  document.querySelectorAll('.preset-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+
+  buatPizza();
+}
+
+
+/* ============ KALKULATOR ============ */
+function hitung() {
+  const r = parseFloat(document.getElementById('jari').value);
+  const hasil = document.getElementById('hasil');
+
+  if (isNaN(r) || r <= 0) {
+    hasil.innerHTML = "⚠️ Masukkan angka jari-jari yang lebih besar dari 0 ya!";
+    hasil.classList.add('show');
+    return;
+  }
+
+  const phi = (r % 7 === 0) ? 22/7 : 3.14;
+  const keliling = 2 * phi * r;
+  const luas = phi * r * r;
+
+  hasil.innerHTML = `
+    <p>✅ <strong>Jari-jari (r)</strong> = ${r}</p>
+    <p>📏 <strong>Keliling</strong> = 2 × π × r = ${keliling.toFixed(2)}</p>
+    <p>🔷 <strong>Luas</strong> = π × r² = ${luas.toFixed(2)}</p>
+    <p style="margin-top:8px; font-size:0.9em; color:#888;">(Menggunakan π = ${phi === 22/7 ? '22/7' : '3,14'})</p>
+  `;
+  hasil.classList.add('show');
+}
+
+
+/* ============ KUIS ============ */
+const soal = [
+  { tanya: "1. Garis dari pusat ke tepi lingkaran disebut...",
+    pilihan: ["Diameter", "Jari-jari", "Busur", "Tali busur"], benar: 1 },
+  { tanya: "2. Jika jari-jari 10 cm, diameternya adalah...",
+    pilihan: ["5 cm", "10 cm", "20 cm", "100 cm"], benar: 2 },
+  { tanya: "3. Rumus keliling lingkaran adalah...",
+    pilihan: ["π × r²", "2 × π × r", "π × d²", "r × r"], benar: 1 },
+  { tanya: "4. Jika r = 7 cm dan π = 22/7, luasnya...",
+    pilihan: ["44 cm²", "154 cm²", "49 cm²", "22 cm²"], benar: 1 },
+  { tanya: "5. Nilai π (pi) kira-kira...",
+    pilihan: ["2,14", "3,14", "4,14", "1,14"], benar: 1 }
+];
+
+let terjawab = 0, skor = 0;
+const quizEl = document.getElementById('quiz');
+const scoreEl = document.getElementById('score');
+
+soal.forEach((s) => {
+  const div = document.createElement('div');
+  div.className = 'quiz-question';
+  div.innerHTML = `<p>${s.tanya}</p>`;
+  s.pilihan.forEach((p, idx) => {
+    const btn = document.createElement('div');
+    btn.className = 'quiz-option';
+    btn.textContent = p;
+    btn.onclick = () => jawab(btn, idx === s.benar, div);
+    div.appendChild(btn);
+  });
+  quizEl.appendChild(div);
+});
+
+function jawab(elemen, benar, parent) {
+  parent.querySelectorAll('.quiz-option').forEach(o => o.classList.add('disabled'));
+  if (benar) {
+    elemen.classList.add('correct');
+    elemen.textContent += ' ✅';
+    skor++;
+  } else {
+    elemen.classList.add('wrong');
+    elemen.textContent += ' ❌';
+    parent.querySelectorAll('.quiz-option').forEach(o => {
+      if (o.textContent.startsWith(parent.dataset.benar)) o.classList.add('correct');
+    });
+  }
+  terjawab++;
+  if (terjawab === soal.length) {
+    let pesan = skor === 5 ? "🌟 Hebat! Kamu juara lingkaran!" :
+                skor >= 3 ? "👍 Bagus! Terus belajar ya!" : "💪 Jangan menyerah, coba lagi!";
+    scoreEl.innerHTML = `Skor kamu: ${skor}/5 <br>${pesan}`;
+  }
+}
+
+document.querySelectorAll('.quiz-question').forEach((q, i) => {
+  q.dataset.benar = soal[i].pilihan[soal[i].benar];
+});
+
+
+/* ============ INIT ============ */
+buatPizza();
+initTali();
+</script>
+
+</body>
+</html>
