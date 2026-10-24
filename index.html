@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Belajar Lingkaran - Animasi Seru!</title>
+<title>Belajar Lingkaran - Media Ajar Interaktif</title>
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Comic Sans MS', 'Segoe UI', sans-serif; }
   body { background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%); min-height: 100vh; padding: 20px; color: #333; }
@@ -16,166 +16,40 @@
   .container { max-width: 950px; margin: 0 auto; }
   .card { background: #fff; border-radius: 25px; padding: 25px; margin-bottom: 20px; box-shadow: 0 8px 20px rgba(0,0,0,0.08); }
   .card h2 { color: #4ecdc4; margin-bottom: 15px; font-size: 1.6em; border-bottom: 3px dashed #4ecdc4; padding-bottom: 8px; }
-  .card p, .card li { font-size: 1.1em; line-height: 1.7; }
+  .card p, .card li { font-size: 1.05em; line-height: 1.7; }
 
   .anim-box { display: flex; flex-direction: column; align-items: center; gap: 15px; margin: 20px 0; }
-  .svg-anim { width: 320px; height: 320px; max-width: 100%; }
+  
+  /* Panel Kontrol */
+  .control-panel { background: #f0fffe; border-radius: 18px; padding: 15px 20px; width: 100%; max-width: 650px; display: flex; flex-direction: column; gap: 12px; margin-bottom: 10px; border: 2px solid #b2f0ec; }
+  .slider-row { display: flex; flex-direction: column; gap: 6px; }
+  .slider-label { display: flex; justify-content: space-between; font-weight: bold; color: #444; }
+  .slider-value { background: #4ecdc4; color: #fff; padding: 3px 12px; border-radius: 10px; min-width: 60px; text-align: center; }
+  
+  input[type=range] { -webkit-appearance: none; width: 100%; height: 10px; border-radius: 8px; background: linear-gradient(to right, #ffb142, #ff6b6b); outline: none; cursor: pointer; }
+  input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; width: 24px; height: 24px; border-radius: 50%; background: #fff; border: 4px solid #4ecdc4; cursor: pointer; }
 
-  .btn-group { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; }
-
-  button {
-    background: #ff6b6b; color: #fff; border: none; padding: 12px 25px; border-radius: 12px;
-    font-size: 1em; font-weight: bold; cursor: pointer; transition: transform 0.2s, background 0.2s;
-    font-family: inherit;
-  }
+  /* Tombol */
+  .btn-group { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; }
+  button { background: #ff6b6b; color: #fff; border: none; padding: 10px 20px; border-radius: 12px; font-size: 1em; font-weight: bold; cursor: pointer; transition: 0.2s; font-family: inherit; }
   button:hover { background: #ee5253; transform: scale(1.05); }
-  button:active { transform: scale(0.98); }
   button.blue { background: #4ecdc4; } button.blue:hover { background: #3bb3ab; }
   button.green { background: #52c41a; } button.green:hover { background: #449d15; }
+  button.purple { background: #9b59b6; } button.purple:hover { background: #8e44ad; }
+  button:disabled { background: #ccc; cursor: not-allowed; transform: none; }
 
-  .tali-path { fill: none; stroke: #ff6b6b; stroke-width: 7; stroke-linecap: round; }
-
-  .label-info {
-    background: #fff5f5; padding: 10px 20px; border-radius: 15px;
-    border-left: 6px solid #ff6b6b; font-size: 1.05em; text-align: center;
-  }
-
-  .pizza-svg { width: 100%; max-width: 700px; height: auto; }
-  .slice { transition: transform 1.4s cubic-bezier(0.4, 0.0, 0.2, 1); }
-
-  /* ===== PANEL SLIDER ===== */
-  .slider-panel {
-    background: #f0fffe;
-    border-radius: 18px;
-    padding: 18px 22px;
-    margin: 10px 0 5px;
-    width: 100%;
-    max-width: 620px;
-    display: flex;
-    flex-direction: column;
-    gap: 14px;
-  }
-
-  .slider-row {
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-  }
-
-  .slider-label {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    font-weight: bold;
-    color: #444;
-    font-size: 1em;
-  }
-
-  .slider-value {
-    background: #4ecdc4;
-    color: #fff;
-    padding: 3px 12px;
-    border-radius: 10px;
-    font-size: 0.95em;
-    min-width: 60px;
-    text-align: center;
-  }
-
-  input[type=range] {
-    -webkit-appearance: none;
-    appearance: none;
-    width: 100%;
-    height: 10px;
-    border-radius: 8px;
-    background: linear-gradient(to right, #ffb142, #ff6b6b);
-    outline: none;
-    cursor: pointer;
-  }
-
-  input[type=range]::-webkit-slider-thumb {
-    -webkit-appearance: none;
-    appearance: none;
-    width: 26px;
-    height: 26px;
-    border-radius: 50%;
-    background: #fff;
-    border: 4px solid #4ecdc4;
-    cursor: pointer;
-    transition: transform 0.15s;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.15);
-  }
-
-  input[type=range]::-webkit-slider-thumb:hover { transform: scale(1.15); }
-
-  input[type=range]::-moz-range-thumb {
-    width: 22px;
-    height: 22px;
-    border-radius: 50%;
-    background: #fff;
-    border: 4px solid #4ecdc4;
-    cursor: pointer;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.15);
-  }
-
-  .preset-group {
-    display: flex;
-    gap: 8px;
-    flex-wrap: wrap;
-    justify-content: center;
-    margin-top: 4px;
-  }
-
-  .preset-btn {
-    background: #fff;
-    color: #4ecdc4;
-    border: 2px solid #4ecdc4;
-    padding: 6px 14px;
-    border-radius: 10px;
-    font-size: 0.9em;
-    font-weight: bold;
-    cursor: pointer;
-    transition: all 0.2s;
-    font-family: inherit;
-  }
-
-  .preset-btn:hover { background: #4ecdc4; color: #fff; transform: scale(1.05); }
-  .preset-btn.active { background: #4ecdc4; color: #fff; }
-
-  .calc-input { display: flex; flex-wrap: wrap; gap: 10px; margin: 15px 0; align-items: center; }
-  .calc-input label { font-weight: bold; }
-  .calc-input input[type=number] {
-    padding: 10px 15px; border: 2px solid #4ecdc4; border-radius: 12px;
-    font-size: 1em; width: 140px; outline: none;
-  }
-  .calc-input input[type=number]:focus { border-color: #ff6b6b; }
-
-  .hasil {
-    background: #fff5f5; border-left: 6px solid #ff6b6b; padding: 15px 20px;
-    border-radius: 12px; margin-top: 15px; font-size: 1.05em; display: none;
-  }
-  .hasil.show { display: block; animation: fadeIn 0.4s; }
+  /* SVG Areas */
+  .svg-responsive { width: 100%; max-width: 700px; height: auto; background: #fafafa; border-radius: 15px; border: 2px dashed #e0e0e0; }
+  
+  /* Narasi Box */
+  .narasi { background: #fff5f5; border-left: 6px solid #ff6b6b; padding: 15px 20px; border-radius: 12px; margin-top: 15px; font-size: 1em; display: none; width: 100%; max-width: 650px; }
+  .narasi.show { display: block; animation: fadeIn 0.4s; }
+  .narasi.biru { background: #f0fffe; border-left-color: #4ecdc4; }
   @keyframes fadeIn { from{opacity:0;transform:translateY(-8px)} to{opacity:1;transform:translateY(0)} }
 
-  .quiz-question { background: #f0fffe; border-radius: 15px; padding: 18px; margin-bottom: 15px; }
-  .quiz-question p { font-weight: bold; margin-bottom: 12px; }
-  .quiz-option {
-    display: block; background: #fff; border: 2px solid #b2f0ec; border-radius: 12px;
-    padding: 12px 18px; margin: 8px 0; cursor: pointer; transition: all 0.2s; font-size: 1em;
-  }
-  .quiz-option:hover { background: #e0fffd; border-color: #4ecdc4; }
-  .quiz-option.correct { background: #c8f7c5; border-color: #4caf50; font-weight: bold; }
-  .quiz-option.wrong { background: #ffcdd2; border-color: #f44336; }
-  .quiz-option.disabled { pointer-events: none; }
+  .formula-highlight { font-size: 1.2em; color: #d35400; font-weight: bold; text-align: center; display: block; margin: 10px 0; }
 
-  #score { text-align: center; font-size: 1.3em; font-weight: bold; color: #4ecdc4; margin-top: 15px; }
-  footer { text-align: center; color: #666; padding: 15px; font-size: 0.95em; }
-
-  @media (max-width: 600px) {
-    header h1 { font-size: 1.6em; }
-    .card h2 { font-size: 1.3em; }
-    .svg-anim { width: 260px; height: 260px; }
-    .slider-panel { padding: 14px 16px; }
-  }
+  @media (max-width: 600px) { .card { padding: 15px; } header h1 { font-size: 1.6em; } }
 </style>
 </head>
 <body>
@@ -187,99 +61,75 @@
 
 <div class="container">
 
+  <!-- BAGIAN 1: KELILING & NARASI -->
   <div class="card">
-    <h2>📖 Apa itu Lingkaran?</h2>
-    <p><strong>Lingkaran</strong> adalah bangun datar yang semua titiknya berjarak sama dari satu titik pusat.</p>
-    <div class="anim-box">
-      <svg class="svg-anim" viewBox="0 0 200 200">
-        <circle cx="100" cy="100" r="80" fill="#ffe0e0" stroke="#ff6b6b" stroke-width="4"/>
-        <circle cx="100" cy="100" r="5" fill="#333"/>
-        <line x1="100" y1="100" x2="180" y2="100" stroke="#4ecdc4" stroke-width="4" stroke-dasharray="6,4"/>
-        <line x1="20" y1="100" x2="180" y2="100" stroke="#ffb142" stroke-width="2" opacity="0.6"/>
-        <text x="100" y="95" text-anchor="middle" font-size="11" fill="#333" font-weight="bold">Pusat</text>
-        <text x="140" y="90" font-size="12" fill="#4ecdc4" font-weight="bold">r</text>
-        <text x="95" y="130" font-size="11" fill="#ffb142" font-weight="bold">d</text>
-      </svg>
-      <div class="label-info">
-        <strong>Titik Pusat</strong> (hitam) • <strong>Jari-jari r</strong> (biru) • <strong>Diameter d = 2×r</strong> (kuning)
-      </div>
-    </div>
-  </div>
-
-  <div class="card">
-    <h2>🎬 Animasi 1: Keliling Lingkaran</h2>
-    <p>Kalau tali berputar mengelilingi lingkaran, panjangnya disebut <strong>keliling</strong>. 🌀</p>
-    <div class="anim-box">
-      <svg class="svg-anim" viewBox="0 0 200 200">
-        <circle cx="100" cy="100" r="80" fill="#fff5f5" stroke="#ffd0d0" stroke-width="2"/>
-        <circle id="tali" class="tali-path" cx="100" cy="100" r="80"/>
-        <circle id="titikJalan" cx="100" cy="20" r="8" fill="#ffb142" stroke="#fff" stroke-width="3" opacity="0"/>
-        <line x1="100" y1="100" x2="180" y2="100" stroke="#4ecdc4" stroke-width="3" stroke-dasharray="5,4"/>
-        <text x="140" y="95" font-size="13" fill="#4ecdc4" font-weight="bold">r</text>
-        <circle cx="100" cy="100" r="4" fill="#333"/>
-      </svg>
-      <div class="btn-group">
-        <button onclick="mainkanTali()">▶️ Putar Tali</button>
-        <button class="blue" onclick="resetTali()">🔄 Ulang</button>
-      </div>
-      <div class="label-info" id="infoKeliling">Keliling = 2 × π × r</div>
-    </div>
-  </div>
-
-  <div class="card">
-    <h2>🍕 Animasi 2: Luas Lingkaran Jadi Persegi</h2>
-    <p>Lingkaran dipotong menjadi banyak bagian, lalu disusun ulang menjadi <strong>persegi panjang</strong>. Ajaib! ✨</p>
-    <div class="anim-box">
-      <svg class="pizza-svg" id="pizzaSvg" viewBox="0 0 700 400"></svg>
-
-      <!-- PANEL SLIDER -->
-      <div class="slider-panel">
-        <div class="slider-row">
-          <div class="slider-label">
-            <span>🍕 Jumlah Potongan</span>
-            <span class="slider-value" id="valPotongan">16</span>
-          </div>
-          <input type="range" id="sliderPotongan" min="4" max="32" step="2" value="16">
+    <h2>🎬 Animasi 1: Keliling & Diameter</h2>
+    
+    <!-- Panel Ukuran -->
+    <div class="control-panel">
+      <div class="slider-row">
+        <div class="slider-label">
+          <span>⚪ Atur Ukuran Lingkaran</span>
+          <span class="slider-value" id="valRadius">R = 90</span>
         </div>
-
-        <div class="slider-row">
-          <div class="slider-label">
-            <span>⚡ Kecepatan Animasi</span>
-            <span class="slider-value" id="valKecepatan">1.4s</span>
-          </div>
-          <input type="range" id="sliderKecepatan" min="0.5" max="3" step="0.1" value="1.4">
-        </div>
-
-        <div class="preset-group">
-          <button class="preset-btn" onclick="setPotongan(8, this)">8</button>
-          <button class="preset-btn active" onclick="setPotongan(16, this)">16</button>
-          <button class="preset-btn" onclick="setPotongan(24, this)">24</button>
-          <button class="preset-btn" onclick="setPotongan(32, this)">32</button>
-        </div>
+        <input type="range" id="sliderRadius" min="40" max="130" step="5" value="90">
       </div>
+    </div>
 
-      <div class="btn-group">
-        <button class="green" onclick="potongPizza()">🍕 Potong & Susun!</button>
-        <button class="blue" onclick="resetPizza()">🔄 Ulang</button>
-      </div>
-      <div class="label-info" id="infoLuas">Luas = π × r²</div>
+    <!-- SVG Keliling -->
+    <svg class="svg-responsive" id="svgKeliling" viewBox="0 0 700 350"></svg>
+
+    <div class="btn-group">
+      <button onclick="mainkanKeliling()" id="btnPutarTali">▶️ Gelar Tali & Ukur</button>
+      <button class="blue" onclick="resetKeliling()">🔄 Ulang</button>
+    </div>
+
+    <!-- Narasi 2πr -->
+    <div class="narasi" id="narasiKeliling">
+      <strong>Penjelasan Rumus Keliling (K = π × d):</strong><br><br>
+      1. Kita tahu bahwa <strong>π (phi)</strong> adalah perbandingan antara keliling (K) dan diameter (d).<br>
+      <span class="formula-highlight">π = K / d</span>
+      2. Karena kita ingin mencari Keliling (K), kita ingat aturan kesetaraan dalam aljabar. Kita kalikan kedua ruas dengan <strong>d</strong>:<br>
+      <span class="formula-highlight">π × d = (K / d) × d</span>
+      3. Huruf <strong>d</strong> di ruas kanan saling membagi habis (dibagi d = 1), sehingga tersisa:<br>
+      <span class="formula-highlight">π × d = K</span>
+      <strong>Kesimpulan:</strong> Keliling lingkaran adalah <strong>K = π × d</strong> (atau K = 2 × π × r).
     </div>
   </div>
 
+  <!-- BAGIAN 2: LUAS & JURING -->
   <div class="card">
-    <h2>🎯 Coba Hitung Sendiri!</h2>
-    <div class="calc-input">
-      <label for="jari">Jari-jari (r):</label>
-      <input type="number" id="jari" placeholder="Contoh: 7" min="0" step="any">
-      <button onclick="hitung()">Hitung! 🚀</button>
+    <h2>🍕 Animasi 2: Juring Lingkaran Jadi Persegi</h2>
+    
+    <!-- Panel Kontrol Luas -->
+    <div class="control-panel">
+      <p style="font-weight: bold; margin-bottom: 5px;">Pilih Lingkaran yang ingin dianimasikan:</p>
+      <div class="btn-group" id="juringSelection" style="margin-bottom: 10px;">
+        <button class="blue" onclick="pilihJuring('A')">Lingkaran A (8)</button>
+        <button class="blue" onclick="pilihJuring('B')">Lingkaran B (16)</button>
+        <button class="blue" onclick="pilihJuring('C')">Lingkaran C (32)</button>
+        <button class="blue" onclick="pilihJuring('D')">Lingkaran D (64)</button>
+      </div>
     </div>
-    <div class="hasil" id="hasil"></div>
-  </div>
 
-  <div class="card">
-    <h2>🏆 Kuis Seru!</h2>
-    <div id="quiz"></div>
-    <div id="score"></div>
+    <!-- SVG Luas (Berisi 4 Lingkaran) -->
+    <svg class="svg-responsive" id="svgLuas" viewBox="0 0 700 450"></svg>
+
+    <div class="btn-group">
+      <button class="green" onclick="animasiJuringTerpilih()" id="btnPotong">🍕 Potong & Susun Juring</button>
+      <button class="purple" onclick="resetLuas()">🔄 Ulang Semua</button>
+    </div>
+
+    <!-- Narasi Rumus Luas -->
+    <div class="narasi biru" id="narasiLuas">
+      <strong>Mengapa Luas Lingkaran = π × r²?</strong><br><br>
+      Setelah juring-juring disusun ulang, mereka membentuk bangun mirip <strong>persegi panjang</strong>.<br><br>
+      • Panjang persegi panjang tersebut berasal dari <strong>setengah keliling lingkaran</strong>. Karena keliling = 2πr, maka panjangnya = ½ × 2πr = <strong>π × r</strong>.<br>
+      • Lebar persegi panjang tersebut adalah <strong>jari-jari (r)</strong>.<br><br>
+      Karena Luas Persegi Panjang = Panjang × Lebar, maka:<br>
+      <span class="formula-highlight">Luas = (π × r) × r = π × r²</span>
+      Perhatikan susunannya: juring-juring saling mengunci seperti gigi ruji (zipper) membentuk persegi panjang yang rapi!
+    </div>
   </div>
 
 </div>
@@ -288,414 +138,333 @@
 
 <script>
 /* ============================================================
-   ANIMASI 1: TALI KELILING
+   STATE GLOBAL
    ============================================================ */
-const R_LINGKARAN = 80;
-const KELILING = 2 * Math.PI * R_LINGKARAN;
+let R_LINGKARAN = 90;
+let animKelilingId = null;
+let juringTerpilih = 'A';
 
-let animTaliId = null;
+const JUMLAH_POTONGAN_MAP = { 'A': 8, 'B': 16, 'C': 32, 'D': 64 };
 
-function initTali() {
-  const tali = document.getElementById('tali');
-  tali.style.strokeDasharray = KELILING;
-  tali.style.strokeDashoffset = KELILING;
-  tali.style.transformOrigin = '100px 100px';
+
+/* ============================================================
+   ANIMASI 1: KELILING (TALI & PENGGARIS)
+   ============================================================ */
+function gambarLingkaranAwal() {
+  const svg = document.getElementById('svgKeliling');
+  svg.innerHTML = '';
+  
+  const cx = 200, cy = 175;
+
+  // Lingkaran
+  const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+  circle.setAttribute('cx', cx); circle.setAttribute('cy', cy);
+  circle.setAttribute('r', R_LINGKARAN);
+  circle.setAttribute('fill', '#fff5f5'); circle.setAttribute('stroke', '#ffd0d0'); circle.setAttribute('stroke-width', '3');
+  circle.setAttribute('id', 'lingkaranDasar');
+  svg.appendChild(circle);
+
+  // Garis Diameter
+  const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+  line.setAttribute('x1', cx - R_LINGKARAN); line.setAttribute('y1', cy);
+  line.setAttribute('x2', cx + R_LINGKARAN); line.setAttribute('y2', cy);
+  line.setAttribute('stroke', '#ffb142'); line.setAttribute('stroke-width', '4');
+  line.setAttribute('id', 'garisDiameter');
+  svg.appendChild(line);
+
+  // Label Diameter
+  const labelD = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+  labelD.setAttribute('x', cx); labelD.setAttribute('y', cy - 10);
+  labelD.setAttribute('text-anchor', 'middle');
+  labelD.setAttribute('font-size', '16'); labelD.setAttribute('fill', '#ff8c1a'); labelD.setAttribute('font-weight', 'bold');
+  labelD.textContent = 'd = ' + (R_LINGKARAN * 2);
+  labelD.setAttribute('id', 'labelDiameter');
+  svg.appendChild(labelD);
+
+  // Tali (Keliling)
+  const tali = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+  tali.setAttribute('cx', cx); tali.setAttribute('cy', cy);
+  tali.setAttribute('r', R_LINGKARAN);
+  tali.setAttribute('fill', 'none'); tali.setAttribute('stroke', '#ff6b6b'); tali.setAttribute('stroke-width', '8');
+  tali.setAttribute('id', 'taliKeliling');
+  tali.style.transformOrigin = `${cx}px ${cy}px`;
   tali.style.transform = 'rotate(-90deg)';
+  svg.appendChild(tali);
+
+  // Penggaris
+  const ruler = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+  ruler.setAttribute('id', 'penggaris');
+  ruler.setAttribute('opacity', '0');
+  
+  const rulerRect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+  rulerRect.setAttribute('x', '350'); rulerRect.setAttribute('y', '200');
+  rulerRect.setAttribute('width', '320'); rulerRect.setAttribute('height', '50');
+  rulerRect.setAttribute('fill', '#f9e79f'); rulerRect.setAttribute('stroke', '#f1c40f'); rulerRect.setAttribute('stroke-width', '2');
+  ruler.appendChild(rulerRect);
+
+  const kelilingMaks = 2 * Math.PI * R_LINGKARAN;
+  const pxPerUnit = 320 / kelilingMaks;
+
+  for (let i = 0; i <= kelilingMaks; i += 10) {
+    const x = 350 + (i * pxPerUnit);
+    if (x > 670) break;
+    const isMajor = i % 50 === 0;
+    const tick = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+    tick.setAttribute('x1', x); tick.setAttribute('y1', '200');
+    tick.setAttribute('x2', x); tick.setAttribute('y2', isMajor ? '215' : '210');
+    tick.setAttribute('stroke', '#333'); tick.setAttribute('stroke-width', isMajor ? '2' : '1');
+    ruler.appendChild(tick);
+
+    if (isMajor) {
+      const txt = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+      txt.setAttribute('x', x); txt.setAttribute('y', '195');
+      txt.setAttribute('text-anchor', 'middle');
+      txt.setAttribute('font-size', '10'); txt.setAttribute('fill', '#333');
+      txt.textContent = i;
+      ruler.appendChild(txt);
+    }
+  }
+  svg.appendChild(ruler);
+
+  // Tali lurus
+  const straightLine = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+  straightLine.setAttribute('x1', '350'); straightLine.setAttribute('y1', '225');
+  straightLine.setAttribute('x2', '350'); straightLine.setAttribute('y2', '225');
+  straightLine.setAttribute('stroke', '#ff6b6b'); straightLine.setAttribute('stroke-width', '8');
+  straightLine.setAttribute('stroke-linecap', 'round');
+  straightLine.setAttribute('id', 'taliLurus');
+  svg.appendChild(straightLine);
 }
 
-function mainkanTali() {
-  const tali = document.getElementById('tali');
-  const titik = document.getElementById('titikJalan');
-  const info = document.getElementById('infoKeliling');
+document.getElementById('sliderRadius').addEventListener('input', (e) => {
+  R_LINGKARAN = parseInt(e.target.value);
+  document.getElementById('valRadius').textContent = `R = ${R_LINGKARAN}`;
+  resetKeliling();
+});
 
-  if (animTaliId) cancelAnimationFrame(animTaliId);
-  initTali();
-  void tali.getBoundingClientRect();
+function resetKeliling() {
+  if (animKelilingId) cancelAnimationFrame(animKelilingId);
+  document.getElementById('narasiKeliling').classList.remove('show');
+  document.getElementById('btnPutarTali').disabled = false;
+  gambarLingkaranAwal();
+}
 
-  titik.style.opacity = '1';
-  titik.setAttribute('cx', 100);
-  titik.setAttribute('cy', 20);
+function mainkanKeliling() {
+  const btn = document.getElementById('btnPutarTali');
+  btn.disabled = true;
+
+  const taliLingkaran = document.getElementById('taliKeliling');
+  const taliLurus = document.getElementById('taliLurus');
+  const penggaris = document.getElementById('penggaris');
+
+  const keliling = 2 * Math.PI * R_LINGKARAN;
+  
+  taliLingkaran.style.strokeDasharray = keliling;
+  taliLingkaran.style.strokeDashoffset = keliling;
+  void taliLingkaran.getBoundingClientRect();
 
   const startTime = performance.now();
-  const durasi = 4000;
+  const durasiTotal = 5000;
 
-  function gambar(now) {
-    const t = Math.min((now - startTime) / durasi, 1);
+  const maxWidthRuler = 320;
+  const pxPerUnit = maxWidthRuler / keliling;
 
-    tali.style.strokeDashoffset = KELILING * (1 - t);
+  function animasi(now) {
+    const t = Math.min((now - startTime) / durasiTotal, 1);
+    
+    if (t < 0.4) {
+      const t1 = t / 0.4;
+      taliLingkaran.style.strokeDashoffset = keliling * (1 - t1);
+    } 
+    else if (t >= 0.4 && t < 0.7) {
+      const t2 = (t - 0.4) / 0.3;
+      
+      if (t2 > 0) penggaris.setAttribute('opacity', t2);
+      
+      const currentPanjang = keliling * t2;
+      const xEnd = 350 + (currentPanjang * pxPerUnit);
+      taliLurus.setAttribute('x2', xEnd);
+      
+      taliLingkaran.style.opacity = 1 - t2;
+    } 
+    else {
+      penggaris.setAttribute('opacity', '1');
+      taliLingkaran.style.opacity = 0;
+      const xEnd = 350 + (keliling * pxPerUnit);
+      taliLurus.setAttribute('x2', xEnd);
+      
+      document.getElementById('narasiKeliling').classList.add('show');
+    }
 
-    const sudut = -Math.PI / 2 + t * 2 * Math.PI;
-    const x = 100 + R_LINGKARAN * Math.cos(sudut);
-    const y = 100 + R_LINGKARAN * Math.sin(sudut);
-    titik.setAttribute('cx', x);
-    titik.setAttribute('cy', y);
-
-    const persen = Math.round(t * 100);
-    info.innerHTML = `🌀 Tali berputar... <strong>${persen}%</strong>`;
-
-    if (t < 1) animTaliId = requestAnimationFrame(gambar);
-    else info.innerHTML = `✅ Tali sudah mengelilingi penuh!<br>Keliling = 2 × π × r`;
+    if (t < 1) {
+      animKelilingId = requestAnimationFrame(animasi);
+    } else {
+      btn.disabled = false;
+    }
   }
-  animTaliId = requestAnimationFrame(gambar);
-}
-
-function resetTali() {
-  if (animTaliId) cancelAnimationFrame(animTaliId);
-  animTaliId = null;
-  initTali();
-  document.getElementById('titikJalan').style.opacity = '0';
-  document.getElementById('titikJalan').setAttribute('cx', 100);
-  document.getElementById('titikJalan').setAttribute('cy', 20);
-  document.getElementById('infoKeliling').innerHTML = 'Keliling = 2 × π × r';
+  
+  animKelilingId = requestAnimationFrame(animasi);
 }
 
 
 /* ============================================================
-   ANIMASI 2: PIZZA -> PERSEGI PANJANG (dengan SLIDER)
+   ANIMASI 2: JURING -> PERSEGI (4 LINGKARAN)
    ============================================================ */
+let kumpulanJuring = {};
 
-let JUMLAH_POTONGAN = 16;  // akan diubah oleh slider
-let KECEPATAN_ANIM = 1.4;  // detik (untuk transition CSS)
+const LAYOUT = {
+  'A': { cx: 150, cy: 110, r: 70, targetX: 420, targetY: 110 },
+  'B': { cx: 150, cy: 250, r: 70, targetX: 420, targetY: 250 },
+  'C': { cx: 150, cy: 390, r: 70, targetX: 420, targetY: 390 },
+  'D': { cx: 550, cy: 110, r: 70, targetX: 550, targetY: 330 } 
+};
 
-const R = 90;
-const CX_ASAL = 170;
-const CY_ASAL = 200;
-const CX_TARGET = 470;
-const CY_TARGET = 200;
-
-let slices = [];
-
-function buatPizza() {
-  const svg = document.getElementById('pizzaSvg');
+function gambarSemuaLingkaran() {
+  const svg = document.getElementById('svgLuas');
   svg.innerHTML = '';
+  kumpulanJuring = {};
 
-  const bg = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
-  bg.setAttribute('x', 0); bg.setAttribute('y', 0);
-  bg.setAttribute('width', 700); bg.setAttribute('height', 400);
-  bg.setAttribute('fill', '#f0fffe');
-  bg.setAttribute('rx', 15);
-  svg.appendChild(bg);
+  Object.keys(LAYOUT).forEach(key => {
+    const cfg = LAYOUT[key];
+    
+    const label = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+    label.setAttribute('x', cfg.cx); label.setAttribute('y', cfg.cy - cfg.r - 10);
+    label.setAttribute('text-anchor', 'middle');
+    label.setAttribute('font-size', '16'); label.setAttribute('font-weight', 'bold'); label.setAttribute('fill', '#666');
+    label.textContent = `Lingkaran ${key} (${JUMLAH_POTONGAN_MAP[key]} potong)`;
+    svg.appendChild(label);
 
-  const lblKiri = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-  lblKiri.setAttribute('x', CX_ASAL);
-  lblKiri.setAttribute('y', 40);
-  lblKiri.setAttribute('text-anchor', 'middle');
-  lblKiri.setAttribute('font-size', '16');
-  lblKiri.setAttribute('fill', '#666');
-  lblKiri.setAttribute('font-weight', 'bold');
-  lblKiri.setAttribute('font-family', 'Comic Sans MS, sans-serif');
-  lblKiri.textContent = '🍕 Lingkaran';
-  svg.appendChild(lblKiri);
+    const group = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+    group.setAttribute('id', `group-${key}`);
+    group.setAttribute('transform', `translate(${cfg.cx}, ${cfg.cy})`);
+    svg.appendChild(group);
 
-  const group = document.createElementNS('http://www.w3.org/2000/svg', 'g');
-  group.setAttribute('id', 'sliceGroup');
-  group.setAttribute('transform', `translate(${CX_ASAL}, ${CY_ASAL})`);
-  svg.appendChild(group);
+    const n = JUMLAH_POTONGAN_MAP[key];
+    const sudutPer = (2 * Math.PI) / n;
+    const r = cfg.r;
+    
+    let juringList = [];
+    
+    for (let i = 0; i < n; i++) {
+      const a1 = -Math.PI/2 + i * sudutPer;
+      const a2 = -Math.PI/2 + (i + 1) * sudutPer;
+      
+      // Warna: Paruh pertama (kuning), paruh kedua (merah)
+      const warna = i < n / 2 ? '#ffb142' : '#ff6b6b';
+      const warnaTepi = i < n / 2 ? '#ff8c1a' : '#ee5253';
 
-  slices = [];
-  const sudutPer = (2 * Math.PI) / JUMLAH_POTONGAN;
-  const sudutAwal = -Math.PI / 2;
+      const x1 = r * Math.cos(a1); const y1 = r * Math.sin(a1);
+      const x2 = r * Math.cos(a2); const y2 = r * Math.sin(a2);
+      const largeArc = (a2 - a1) > Math.PI ? 1 : 0;
 
-  for (let i = 0; i < JUMLAH_POTONGAN; i++) {
-    const a1 = sudutAwal + i * sudutPer;
-    const a2 = sudutAwal + (i + 1) * sudutPer;
+      const d = `M 0 0 L ${x1} ${y1} A ${r} ${r} 0 ${largeArc} 1 ${x2} ${y2} Z`;
 
-    const warna = i % 2 === 0 ? '#ffb142' : '#ff6b6b';
-    const warnaTepi = i % 2 === 0 ? '#ff8c1a' : '#ee5253';
-
-    const x1 = R * Math.cos(a1);
-    const y1 = R * Math.sin(a1);
-    const x2 = R * Math.cos(a2);
-    const y2 = R * Math.sin(a2);
-    const largeArc = (a2 - a1) > Math.PI ? 1 : 0;
-
-    const d = `M 0 0
-               L ${x1} ${y1}
-               A ${R} ${R} 0 ${largeArc} 1 ${x2} ${y2}
-               Z`;
-
-    const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-    path.setAttribute('d', d);
-    path.setAttribute('fill', warna);
-    path.setAttribute('stroke', warnaTepi);
-    path.setAttribute('stroke-width', '1.2');
-    path.classList.add('slice');
-    path.style.transformOrigin = '0 0';
-    path.style.transitionDuration = `${KECEPATAN_ANIM}s`;
-
-    group.appendChild(path);
-
-    slices.push({
-      el: path,
-      a1: a1,
-      a2: a2,
-      sudutTengah: a1 + sudutPer / 2,
-      index: i
-    });
-  }
-
-  document.getElementById('infoLuas').innerHTML = 'Luas = π × r²';
+      const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+      path.setAttribute('d', d);
+      path.setAttribute('fill', warna);
+      path.setAttribute('stroke', warnaTepi);
+      path.setAttribute('stroke-width', '1');
+      path.classList.add('slice');
+      path.style.transformOrigin = '0 0';
+      path.style.transition = 'transform 1.4s cubic-bezier(0.4, 0.0, 0.2, 1)';
+      path.style.transform = 'translate(0px, 0px) rotate(0deg)';
+      
+      group.appendChild(path);
+      juringList.push({
+        el: path,
+        a1: a1,
+        a2: a2,
+        sudutTengah: a1 + sudutPer/2,
+        index: i
+      });
+    }
+    
+    kumpulanJuring[key] = juringList;
+  });
 }
 
-function potongPizza() {
-  const svg = document.getElementById('pizzaSvg');
-  const info = document.getElementById('infoLuas');
-  info.innerHTML = '✂️ Memotong & menyusun ulang...';
+function pilihJuring(key) {
+  juringTerpilih = key;
+  document.querySelectorAll('#juringSelection button').forEach(b => b.classList.remove('green'));
+  document.querySelector(`#juringSelection button:nth-child(${['A','B','C','D'].indexOf(key)+1})`).classList.add('green');
+  resetLuasVisualSaja();
+}
 
-  svg.querySelectorAll('.overlay').forEach(el => el.remove());
-
-  const setengah = JUMLAH_POTONGAN / 2;
-  const lebarPersegi = Math.PI * R;
+function animasiJuringTerpilih() {
+  const key = juringTerpilih;
+  const cfg = LAYOUT[key];
+  const juringList = kumpulanJuring[key];
+  const n = JUMLAH_POTONGAN_MAP[key];
+  
+  const lebarPersegi = Math.PI * cfg.r;
+  const setengah = n / 2;
   const lebarSlot = lebarPersegi / setengah;
-  const x0Persegi = CX_TARGET - lebarPersegi / 2;
-  const yAtas = CY_TARGET - R / 2;
-  const yBawah = CY_TARGET + R / 2;
+  const x0Persegi = cfg.targetX - lebarPersegi / 2;
+  const yAtas = cfg.targetY - cfg.r / 2;
+  const yBawah = cfg.targetY + cfg.r / 2;
 
-  slices.forEach((slice, i) => {
-    const baris = i % 2;
+  // KUNCI PERBAIKAN: Memisahkan juring berdasarkan warna (kuning & merah)
+  // lalu mengambilnya secara bergantian agar membentuk pola zig-zag.
+  const juringKuning = juringList.filter(s => s.index < n / 2);
+  const juringMerah = juringList.filter(s => s.index >= n / 2);
+
+  const urutanSusun = [];
+  for (let i = 0; i < n / 2; i++) {
+    urutanSusun.push(juringKuning[i]);
+    urutanSusun.push(juringMerah[i]);
+  }
+
+  urutanSusun.forEach((slice, i) => {
+    const baris = i % 2; // 0 = kuning (atas), 1 = merah (bawah)
     const kolom = Math.floor(i / 2);
-
     let rotasi, tx, ty;
 
     if (baris === 0) {
-      // WEDGE GENAP
-      const rotasi = Math.PI / 2 - slice.sudutTengah;
-      const deg = rotasi * 180 / Math.PI;
-
+      // BARIS ATAS (Ujung lancip menghadap bawah)
+      rotasi = (Math.PI / 2) - slice.sudutTengah;
       const xUjung = x0Persegi + (kolom + 0.5) * lebarSlot;
       const yUjung = yAtas;
-
-      tx = xUjung - CX_ASAL;
-      ty = yUjung - CY_ASAL;
-
-      slice.el.style.transform = `translate(${tx}px, ${ty}px) rotate(${deg}deg)`;
-
+      tx = xUjung - cfg.cx; ty = yUjung - cfg.cy;
     } else {
-      // WEDGE GANJIL (MIRROR 180° + OFFSET ½ KOLOM)
-      const rotasi = Math.PI / 2 - slice.sudutTengah + Math.PI;
-      const deg = rotasi * 180 / Math.PI;
-
+      // BARIS BAWAH (Ujung lancip menghadap atas)
+      rotasi = (-Math.PI / 2) - slice.sudutTengah; 
       const xUjung = x0Persegi + (kolom + 1) * lebarSlot;
       const yUjung = yBawah;
-
-      tx = xUjung - CX_ASAL;
-      ty = yUjung - CY_ASAL;
-
-      slice.el.style.transform = `translate(${tx}px, ${ty}px) rotate(${deg}deg)`;
+      tx = xUjung - cfg.cx; ty = yUjung - cfg.cy;
     }
 
-    slice.el.style.transitionDelay = `${i * 0.04}s`;
+    const deg = rotasi * 180 / Math.PI;
+    slice.el.style.transitionDelay = `${i * (1.0 / n)}s`;
+    slice.el.style.transform = `translate(${tx}px, ${ty}px) rotate(${deg}deg)`;
   });
 
-  const totalDelay = JUMLAH_POTONGAN * 40 + KECEPATAN_ANIM * 1000 + 200;
   setTimeout(() => {
-    info.innerHTML = `🎉 Tadaa! Potongan tersusun jadi <strong>persegi panjang</strong>!<br>
-      Panjang ≈ ½ keliling = π × r &nbsp;•&nbsp; Lebar = r<br>
-      <strong>Luas = π × r × r = π × r²</strong>`;
-
-    const x0 = x0Persegi;
-    const y0 = yAtas;
-
-    const outline = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
-    outline.setAttribute('x', x0);
-    outline.setAttribute('y', y0);
-    outline.setAttribute('width', lebarPersegi);
-    outline.setAttribute('height', R);
-    outline.setAttribute('fill', 'none');
-    outline.setAttribute('stroke', '#4ecdc4');
-    outline.setAttribute('stroke-width', '3');
-    outline.setAttribute('stroke-dasharray', '10,6');
-    outline.setAttribute('rx', '6');
-    outline.classList.add('overlay');
-    svg.appendChild(outline);
-
-    const lblPanjang = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-    lblPanjang.setAttribute('x', CX_TARGET);
-    lblPanjang.setAttribute('y', y0 - 12);
-    lblPanjang.setAttribute('text-anchor', 'middle');
-    lblPanjang.setAttribute('font-size', '15');
-    lblPanjang.setAttribute('fill', '#4ecdc4');
-    lblPanjang.setAttribute('font-weight', 'bold');
-    lblPanjang.setAttribute('font-family', 'Comic Sans MS, sans-serif');
-    lblPanjang.textContent = 'panjang = π × r';
-    lblPanjang.classList.add('overlay');
-    svg.appendChild(lblPanjang);
-
-    const garisLebar = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-    garisLebar.setAttribute('x1', x0 + lebarPersegi + 12);
-    garisLebar.setAttribute('y1', y0);
-    garisLebar.setAttribute('x2', x0 + lebarPersegi + 12);
-    garisLebar.setAttribute('y2', y0 + R);
-    garisLebar.setAttribute('stroke', '#ff6b6b');
-    garisLebar.setAttribute('stroke-width', '2');
-    garisLebar.classList.add('overlay');
-    svg.appendChild(garisLebar);
-
-    const lblLebar = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-    lblLebar.setAttribute('x', x0 + lebarPersegi + 18);
-    lblLebar.setAttribute('y', CY_TARGET + 5);
-    lblLebar.setAttribute('font-size', '15');
-    lblLebar.setAttribute('fill', '#ff6b6b');
-    lblLebar.setAttribute('font-weight', 'bold');
-    lblLebar.setAttribute('font-family', 'Comic Sans MS, sans-serif');
-    lblLebar.textContent = 'r';
-    lblLebar.classList.add('overlay');
-    svg.appendChild(lblLebar);
-
-  }, totalDelay);
+    document.getElementById('narasiLuas').classList.add('show');
+  }, 1500);
 }
 
-function resetPizza() {
-  slices.forEach(s => {
-    s.el.style.transitionDelay = '0s';
-    s.el.style.transform = 'translate(0px, 0px) rotate(0deg)';
-  });
-  const svg = document.getElementById('pizzaSvg');
-  svg.querySelectorAll('.overlay').forEach(el => el.remove());
-  document.getElementById('infoLuas').innerHTML = 'Luas = π × r²';
-}
-
-
-/* ============ SLIDER CONTROL ============ */
-const sliderPotongan = document.getElementById('sliderPotongan');
-const sliderKecepatan = document.getElementById('sliderKecepatan');
-const valPotongan = document.getElementById('valPotongan');
-const valKecepatan = document.getElementById('valKecepatan');
-
-// Slider jumlah potongan
-sliderPotongan.addEventListener('input', (e) => {
-  let val = parseInt(e.target.value);
-
-  // Harus genap (supaya bisa dibagi 2 untuk atas-bawah)
-  if (val % 2 !== 0) val += 1;
-
-  // Minimal 4, maksimal 32
-  if (val < 4) val = 4;
-  if (val > 32) val = 32;
-
-  JUMLAH_POTONGAN = val;
-  valPotongan.textContent = val;
-  e.target.value = val;
-
-  // Update active preset
-  document.querySelectorAll('.preset-btn').forEach(b => {
-    b.classList.toggle('active', parseInt(b.textContent) === val);
-  });
-
-  // Rebuild pizza
-  buatPizza();
-});
-
-// Slider kecepatan
-sliderKecepatan.addEventListener('input', (e) => {
-  KECEPATAN_ANIM = parseFloat(e.target.value);
-  valKecepatan.textContent = KECEPATAN_ANIM.toFixed(1) + 's';
-
-  // Update durasi transition semua slice
-  slices.forEach(s => {
-    s.el.style.transitionDuration = `${KECEPATAN_ANIM}s`;
-  });
-});
-
-// Preset buttons
-function setPotongan(val, btn) {
-  sliderPotongan.value = val;
-  JUMLAH_POTONGAN = val;
-  valPotongan.textContent = val;
-
-  document.querySelectorAll('.preset-btn').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-
-  buatPizza();
-}
-
-
-/* ============ KALKULATOR ============ */
-function hitung() {
-  const r = parseFloat(document.getElementById('jari').value);
-  const hasil = document.getElementById('hasil');
-
-  if (isNaN(r) || r <= 0) {
-    hasil.innerHTML = "⚠️ Masukkan angka jari-jari yang lebih besar dari 0 ya!";
-    hasil.classList.add('show');
-    return;
-  }
-
-  const phi = (r % 7 === 0) ? 22/7 : 3.14;
-  const keliling = 2 * phi * r;
-  const luas = phi * r * r;
-
-  hasil.innerHTML = `
-    <p>✅ <strong>Jari-jari (r)</strong> = ${r}</p>
-    <p>📏 <strong>Keliling</strong> = 2 × π × r = ${keliling.toFixed(2)}</p>
-    <p>🔷 <strong>Luas</strong> = π × r² = ${luas.toFixed(2)}</p>
-    <p style="margin-top:8px; font-size:0.9em; color:#888;">(Menggunakan π = ${phi === 22/7 ? '22/7' : '3,14'})</p>
-  `;
-  hasil.classList.add('show');
-}
-
-
-/* ============ KUIS ============ */
-const soal = [
-  { tanya: "1. Garis dari pusat ke tepi lingkaran disebut...",
-    pilihan: ["Diameter", "Jari-jari", "Busur", "Tali busur"], benar: 1 },
-  { tanya: "2. Jika jari-jari 10 cm, diameternya adalah...",
-    pilihan: ["5 cm", "10 cm", "20 cm", "100 cm"], benar: 2 },
-  { tanya: "3. Rumus keliling lingkaran adalah...",
-    pilihan: ["π × r²", "2 × π × r", "π × d²", "r × r"], benar: 1 },
-  { tanya: "4. Jika r = 7 cm dan π = 22/7, luasnya...",
-    pilihan: ["44 cm²", "154 cm²", "49 cm²", "22 cm²"], benar: 1 },
-  { tanya: "5. Nilai π (pi) kira-kira...",
-    pilihan: ["2,14", "3,14", "4,14", "1,14"], benar: 1 }
-];
-
-let terjawab = 0, skor = 0;
-const quizEl = document.getElementById('quiz');
-const scoreEl = document.getElementById('score');
-
-soal.forEach((s) => {
-  const div = document.createElement('div');
-  div.className = 'quiz-question';
-  div.innerHTML = `<p>${s.tanya}</p>`;
-  s.pilihan.forEach((p, idx) => {
-    const btn = document.createElement('div');
-    btn.className = 'quiz-option';
-    btn.textContent = p;
-    btn.onclick = () => jawab(btn, idx === s.benar, div);
-    div.appendChild(btn);
-  });
-  quizEl.appendChild(div);
-});
-
-function jawab(elemen, benar, parent) {
-  parent.querySelectorAll('.quiz-option').forEach(o => o.classList.add('disabled'));
-  if (benar) {
-    elemen.classList.add('correct');
-    elemen.textContent += ' ✅';
-    skor++;
-  } else {
-    elemen.classList.add('wrong');
-    elemen.textContent += ' ❌';
-    parent.querySelectorAll('.quiz-option').forEach(o => {
-      if (o.textContent.startsWith(parent.dataset.benar)) o.classList.add('correct');
+function resetLuasVisualSaja() {
+  Object.keys(kumpulanJuring).forEach(key => {
+    kumpulanJuring[key].forEach(slice => {
+      slice.el.style.transitionDelay = '0s';
+      slice.el.style.transform = 'translate(0px, 0px) rotate(0deg)';
     });
-  }
-  terjawab++;
-  if (terjawab === soal.length) {
-    let pesan = skor === 5 ? "🌟 Hebat! Kamu juara lingkaran!" :
-                skor >= 3 ? "👍 Bagus! Terus belajar ya!" : "💪 Jangan menyerah, coba lagi!";
-    scoreEl.innerHTML = `Skor kamu: ${skor}/5 <br>${pesan}`;
-  }
+  });
+  document.getElementById('narasiLuas').classList.remove('show');
 }
 
-document.querySelectorAll('.quiz-question').forEach((q, i) => {
-  q.dataset.benar = soal[i].pilihan[soal[i].benar];
-});
+function resetLuas() {
+  resetLuasVisualSaja();
+  pilihJuring('A');
+}
 
 
 /* ============ INIT ============ */
-buatPizza();
-initTali();
+window.onload = () => {
+  gambarLingkaranAwal();
+  gambarSemuaLingkaran();
+  pilihJuring('A');
+};
 </script>
 
 </body>
